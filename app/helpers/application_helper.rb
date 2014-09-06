@@ -33,7 +33,18 @@ module ApplicationHelper
 
 		end
 
-		CSV.open("/Users/jaypinho/Desktop/fileoutput.csv", "wb") do |csv|
+		output_file = File.dirname(filename).to_s
+		unless (output_file.last == "/") or (output_file.last == "\\")
+			if output_file.include? "\\"
+				output_file += "\\"
+			else
+				output_file += "/"
+			end
+		end
+		output_file += File.basename(filename).to_s.first(File.basename(filename).to_s.length - 4)
+		output_file += "_output.csv"
+
+		CSV.open(output_file, "wb") do |csv|
 			csv_output.each do |y|
 				csv << y
 			end
@@ -45,6 +56,10 @@ module ApplicationHelper
 		testvar = ["hello", "goodbye"]
 		testvar2 = [*testvar, "and adieu"]
 		puts testvar2.inspect
+
+		puts File.dirname("/Users/jaypinho/Desktop/fileoutput.csv")
+		puts File.basename("/Users/jaypinho/Desktop/fileoutput.csv")
+
 	end
 
 end
