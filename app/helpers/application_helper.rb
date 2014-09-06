@@ -20,13 +20,20 @@ module ApplicationHelper
 
 				uri = URI(last_col)
 				res = Net::HTTP.get_response(uri)
-				csv_output << [*x, res.code, res.message]
+
+				case res
+				when Net::HTTPRedirection
+					csv_output << [*x, res.code, res.message, res['location']]
+				else
+					csv_output << [*x, res.code, res.message, ""]
+				end
+				
 
 				sleep 1
 
 			rescue
 
-				csv_output << [*x, "", "Couldn't ping"]
+				csv_output << [*x, "", "Couldn't ping", ""]
 				next
 
 			end
