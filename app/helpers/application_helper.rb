@@ -9,16 +9,27 @@ module ApplicationHelper
 		csv_output = Array.new
 
 		CSV.foreach(filename, :headers => false) do |row|
-  			url << row[0].to_s
+  			url << row
 		end
 
 		url.each do |x|
 
-			uri = URI(x)
-			res = Net::HTTP.get_response(uri)
-			csv_output << [x, res.code, res.message]
+			last_col = x[x.length - 1].to_s
 
-			sleep 2
+			begin
+
+				uri = URI(last_col)
+				res = Net::HTTP.get_response(uri)
+				csv_output << [*x, res.code, res.message]
+
+				sleep 1
+
+			rescue
+
+				csv_output << [*x, "", "Couldn't ping"]
+				next
+
+			end
 
 		end
 
@@ -28,6 +39,12 @@ module ApplicationHelper
 			end
 		end
 
+	end
+
+	def testsomething
+		testvar = ["hello", "goodbye"]
+		testvar2 = [*testvar, "and adieu"]
+		puts testvar2.inspect
 	end
 
 end
