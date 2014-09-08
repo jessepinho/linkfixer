@@ -29,7 +29,7 @@ module ApplicationHelper
 				end
 				
 				puts last_col
-				sleep 1
+				# sleep 1
 
 			rescue
 
