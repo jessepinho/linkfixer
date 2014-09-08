@@ -40,6 +40,15 @@ module ApplicationHelper
 
 		end
 
+		csv_outcome = CSV.generate("") do |csv|
+			csv_output.each do |cf|
+				csv << cf
+			end
+		end
+
+		return csv_outcome
+
+=begin
 		output_file = File.dirname(filename).to_s
 		unless (output_file.last == "/") or (output_file.last == "\\")
 			if output_file.include? "\\"
@@ -56,6 +65,7 @@ module ApplicationHelper
 				csv << y
 			end
 		end
+=end
 
 	end
 
