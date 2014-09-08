@@ -28,7 +28,7 @@ module ApplicationHelper
 					csv_output << [*x, res.code, res.message, ""]
 				end
 				
-
+				puts last_col
 				sleep 1
 
 			rescue
