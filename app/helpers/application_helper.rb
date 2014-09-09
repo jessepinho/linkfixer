@@ -24,12 +24,13 @@ module ApplicationHelper
 
 				case res
 				when Net::HTTPRedirection
-					csv_output << [*x, res.code, res.message, res['location']]
+					final_redir = get_final_redirect(res['location'])
+					csv_output << [*x, res.code, res.message, final_redir]
 				else
 					csv_output << [*x, res.code, res.message, ""]
 				end
 				
-				puts last_col
+				# puts last_col
 				# sleep 1
 
 			rescue
@@ -78,6 +79,30 @@ module ApplicationHelper
 		puts File.dirname("/Users/jaypinho/Desktop/fileoutput.csv")
 		puts File.basename("/Users/jaypinho/Desktop/fileoutput.csv")
 
+	end
+
+	def get_final_redirect(page_url, limit = 5)
+
+		raise ArgumentError, 'Too many HTTP redirects' if limit == 0
+
+		begin
+
+			res = Net::HTTP.get_response(URI(page_url))
+
+			case res
+			when Net::HTTPRedirection
+				get_final_redirect(res['location'], limit - 1)
+			else
+				page_url
+			end
+			
+			# sleep 1
+
+		rescue
+
+			page_url
+
+		end
 	end
 
 end
