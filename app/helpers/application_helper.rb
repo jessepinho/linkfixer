@@ -10,6 +10,7 @@ module ApplicationHelper
 
 		CSV.foreach(filename, :headers => false) do |row|
   			url << row
+  			break if url.length == 50
 		end
 
 		url.each do |x|
