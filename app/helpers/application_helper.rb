@@ -4,7 +4,7 @@ module ApplicationHelper
 	require 'csv'
 
 	# This method gets the HTTP response information
-	def find_http_response(filename)
+	def find_http_response(filename, search_term)
 
 		url = Array.new
 		csv_output = Array.new
@@ -31,11 +31,19 @@ module ApplicationHelper
 				when Net::HTTPRedirection
 					# If redirected, find the final destination URL
 					final_redir = get_final_redirect(res['location'])
-					csv_output << [*x, res.code, res.message, final_redir]
+					if search_term != ""
+						csv_output << [*x, res.code, res.message, final_redir, res.body.include?(search_term).to_s]
+					else
+						csv_output << [*x, res.code, res.message, final_redir, ""]
+					end
 				else
-					csv_output << [*x, res.code, res.message, ""]
+					if search_term != ""
+						csv_output << [*x, res.code, res.message, "", res.body.include?(search_term).to_s]
+					else
+						csv_output << [*x, res.code, res.message, "", ""]
+					end
 				end
-				
+
 				# Un-comment the below "sleep" method in order to enable a 1-second pause between pings
 				# sleep 1
 
@@ -76,7 +84,7 @@ module ApplicationHelper
 			else
 				page_url
 			end
-			
+
 			# sleep 1
 
 		rescue

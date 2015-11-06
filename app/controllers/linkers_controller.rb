@@ -15,8 +15,8 @@ class LinkersController < ApplicationController
 	end
 
 	def uploader
-	    
-	  	@@post = find_http_response(params[:CSVfile].tempfile)
+
+	  	@@post = find_http_response(params[:CSVfile].tempfile, params[:search_term])
 	    redirect_to action: "index", :format => :csv
   	end
 
