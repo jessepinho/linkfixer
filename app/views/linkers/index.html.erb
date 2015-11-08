@@ -47,15 +47,21 @@ $(function() {
 
       lines.forEach(function(line) {
         var $tr = $('<tr>'),
-            requestParams = { url_string: line, search_term: $('#search-term').val() };
+            request = new XMLHttpRequest(),
+            url = '<%= ping_url_path %>?url_string=' + encodeURIComponent(line) + '&search_term=' + encodeURIComponent($('#search-term').val());
 
         $tr.append($('<td>' + line + '</td>'));
-        $.getJSON('<%= ping_url_path %>', requestParams).done(function(result) {
-          result.forEach(function(item) {
-            $tr.append($('<td>' + item + '</td>'));
-          });
-          $('#test-results tbody').append($tr);
-        });
+        request.open('GET', url);
+        request.onreadystatechange = function() {
+          if (request.status === 200 && request.readyState === XMLHttpRequest.DONE) {
+            var response = JSON.parse(request.responseText);
+            response.forEach(function(item) {
+              $tr.append($('<td>' + item + '</td>'));
+            });
+            $('#test-results tbody').append($tr);
+          }
+        };
+        request.send();
       });
     };
 
