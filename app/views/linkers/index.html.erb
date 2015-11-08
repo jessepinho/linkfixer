@@ -39,8 +39,7 @@ $(function() {
 
   var readCSVFile = function() {
     var csvContents = document.getElementById("CSVfile").files[0],
-        reader = new FileReader(),
-        tbdy = $('#test-results tbody')[0];
+        reader = new FileReader();
 
     reader.onload = function(event) {
       var lines = reader.result.split('\n');
