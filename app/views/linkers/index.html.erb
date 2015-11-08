@@ -44,24 +44,29 @@ function readCSVFile() {
       tbdy = $('#test-results tbody')[0];
 
   reader.onload = function(event) {
-
     var lines = reader.result.split('\n');
 
-    for(var i = 0; i < lines.length; i+=1) {
+    for (var i = 0; i < lines.length; i+=1) {
+      var new_row = document.createElement('tr'),
+          new_cell = document.createElement('td'),
+          request = new XMLHttpRequest;
 
-      var new_row = document.createElement('tr');
-      var new_cell = document.createElement('td'); new_cell.appendChild(document.createTextNode(lines[i]));
+      new_cell.appendChild(document.createTextNode(lines[i]));
       new_row.appendChild(new_cell);
 
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "<%= ping_url_path %>?url_string=" + encodeURIComponent(lines[i]) + "&search_term=" + encodeURIComponent(document.getElementById('search_term').value), false);
-      xhttp.send();
-      if (xhttp.readyState == 4 && xhttp.status == 200) {
-        console.log(xhttp.responseText);
-        new_cell = document.createElement('td'); new_cell.appendChild(document.createTextNode(JSON.parse(xhttp.responseText)[0])); new_row.appendChild(new_cell);
-        new_cell = document.createElement('td'); new_cell.appendChild(document.createTextNode(JSON.parse(xhttp.responseText)[1])); new_row.appendChild(new_cell);
-        new_cell = document.createElement('td'); new_cell.appendChild(document.createTextNode(JSON.parse(xhttp.responseText)[2])); new_row.appendChild(new_cell);
-        new_cell = document.createElement('td'); new_cell.appendChild(document.createTextNode(JSON.parse(xhttp.responseText)[3])); new_row.appendChild(new_cell);
+      request.open("GET", "<%= ping_url_path %>?url_string=" + encodeURIComponent(lines[i]) + "&search_term=" + encodeURIComponent(document.getElementById('search_term').value), false);
+      request.send();
+
+      if (request.readyState == 4 && request.status == 200) {
+        var response = JSON.parse(request.responseText);
+        console.log(response);
+
+        response.forEach(function(item) {
+          var new_cell = document.createElement('td');
+          new_cell.appendChild(document.createTextNode(item));
+          new_row.appendChild(new_cell);
+        });
+
         tbdy.appendChild(new_row);
       }
 
