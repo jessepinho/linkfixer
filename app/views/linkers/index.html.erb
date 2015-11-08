@@ -11,38 +11,37 @@
     <%= text_field_tag 'search_term', "", {:placeholder => 'Search term here', :class => 'form-control'} %>
   </div>
   <%= submit_tag 'Process URLs', class: 'btn btn-default' %>
-  <%= link_to 'Test', 'javascript:void(0)', :onclick => 'readCSVFile()', class: 'btn btn-default' %>
+  <button class='btn btn-default' id='test-button'>Test</button>
 <% end %>
 
-<div id="testdiv"></div>
+<div id="test-results">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>URL</th>
+        <th>HTTP code</th>
+        <th>HTTP status</th>
+        <th>Redirect</th>
+        <th>Search term exists?</th>
+      </tr>
+    </thead>
+    <tbody id="test-results-tbody"></tbody>
+  </table>
+</div>
 
 <script>
+$(function() {
+  $('#test-button').click(function(e) {
+    e.preventDefault();
+    $('#test-results').show();
+    readCSVFile();
+  });
+});
+
 function readCSVFile() {
-
-  var tbl = document.createElement('table'); tbl.className = "table";
-  var thd = document.createElement('thead');
-  var thdr = document.createElement('tr');
-  var tbdy = document.createElement('tbody');
-  var th1 = document.createElement('th'); th1.appendChild(document.createTextNode('URL'));
-  var th2 = document.createElement('th'); th2.appendChild(document.createTextNode('HTTP Code'));
-  var th3 = document.createElement('th'); th3.appendChild(document.createTextNode('HTTP Status'));
-  var th4 = document.createElement('th'); th4.appendChild(document.createTextNode('Redirect'));
-  var th5 = document.createElement('th'); th5.appendChild(document.createTextNode('Search Term Exists?'));
-
-  thdr.appendChild(th1);
-  thdr.appendChild(th2);
-  thdr.appendChild(th3);
-  thdr.appendChild(th4);
-  thdr.appendChild(th5);
-
-  thd.appendChild(thdr);
-  tbl.appendChild(thd);
-  tbl.appendChild(tbdy);
-
-  document.getElementById('testdiv').appendChild(tbl);
-
-  var csv_list = document.getElementById("CSVfile").files[0];
-  var reader = new FileReader();
+  var csv_list = document.getElementById("CSVfile").files[0],
+      reader = new FileReader(),
+      tbdy = document.getElementById('test-results-tbody');
 
   reader.onload = function(event) {
 
