@@ -29,41 +29,6 @@
   </table>
 </div>
 
-<script>
-$(function() {
-  $('#test-button').click(function(e) {
-    e.preventDefault();
-    $('#test-results').show();
-    readCSVFile();
-  });
-
-  var readCSVFile = function() {
-    var csvContents = document.getElementById("CSVfile").files[0],
-        reader = new FileReader();
-
-    reader.onload = function(event) {
-      var lines = reader.result.split('\n');
-
-      lines.forEach(function(line) {
-        var $tr = $('<tr>'),
-            requestParams = { url_string: line, search_term: $('#search-term').val() };
-
-        $tr.append($('<td>' + line + '</td>'));
-        $.getJSON('<%= ping_url_path %>', requestParams).done(function(result) {
-          result.forEach(function(item) {
-            $tr.append($('<td>' + item + '</td>'));
-          });
-          $('#test-results tbody').append($tr);
-        });
-      });
-    };
-
-    reader.readAsText(csvContents);
-  };
-});
-
-</script>
-
 <p>&nbsp;</p>
 
 <h3>Instructions</h3>
