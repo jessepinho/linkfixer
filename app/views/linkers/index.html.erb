@@ -25,7 +25,7 @@
         <th>Search term exists?</th>
       </tr>
     </thead>
-    <tbody id="test-results-tbody"></tbody>
+    <tbody></tbody>
   </table>
 </div>
 
@@ -41,7 +41,7 @@ $(function() {
 function readCSVFile() {
   var csv_list = document.getElementById("CSVfile").files[0],
       reader = new FileReader(),
-      tbdy = document.getElementById('test-results-tbody');
+      tbdy = $('#test-results tbody')[0];
 
   reader.onload = function(event) {
 
