@@ -36,46 +36,46 @@ $(function() {
     $('#test-results').show();
     readCSVFile();
   });
+
+  var readCSVFile = function() {
+    var csv_list = document.getElementById("CSVfile").files[0],
+        reader = new FileReader(),
+        tbdy = $('#test-results tbody')[0];
+
+    reader.onload = function(event) {
+      var lines = reader.result.split('\n');
+
+      lines.forEach(function(line) {
+        var new_row = document.createElement('tr'),
+            new_cell = document.createElement('td'),
+            request = new XMLHttpRequest;
+
+        new_cell.appendChild(document.createTextNode(line));
+        new_row.appendChild(new_cell);
+
+        request.open("GET", "<%= ping_url_path %>?url_string=" + encodeURIComponent(line) + "&search_term=" + encodeURIComponent(document.getElementById('search_term').value), false);
+        request.send();
+
+        if (request.readyState == 4 && request.status == 200) {
+          var response = JSON.parse(request.responseText);
+          console.log(response);
+
+          response.forEach(function(item) {
+            var new_cell = document.createElement('td');
+            new_cell.appendChild(document.createTextNode(item));
+            new_row.appendChild(new_cell);
+          });
+
+          tbdy.appendChild(new_row);
+        }
+      });
+
+    }
+
+    reader.readAsText(csv_list);
+  };
 });
 
-function readCSVFile() {
-  var csv_list = document.getElementById("CSVfile").files[0],
-      reader = new FileReader(),
-      tbdy = $('#test-results tbody')[0];
-
-  reader.onload = function(event) {
-    var lines = reader.result.split('\n');
-
-    lines.forEach(function(line) {
-      var new_row = document.createElement('tr'),
-          new_cell = document.createElement('td'),
-          request = new XMLHttpRequest;
-
-      new_cell.appendChild(document.createTextNode(line));
-      new_row.appendChild(new_cell);
-
-      request.open("GET", "<%= ping_url_path %>?url_string=" + encodeURIComponent(line) + "&search_term=" + encodeURIComponent(document.getElementById('search_term').value), false);
-      request.send();
-
-      if (request.readyState == 4 && request.status == 200) {
-        var response = JSON.parse(request.responseText);
-        console.log(response);
-
-        response.forEach(function(item) {
-          var new_cell = document.createElement('td');
-          new_cell.appendChild(document.createTextNode(item));
-          new_row.appendChild(new_cell);
-        });
-
-        tbdy.appendChild(new_row);
-      }
-    });
-
-  }
-
-  reader.readAsText(csv_list);
-
-}
 </script>
 
 <p>&nbsp;</p>
