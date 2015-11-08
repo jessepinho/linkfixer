@@ -50,7 +50,7 @@ module ApplicationHelper
 			# In case of error...
 			rescue
 
-				csv_output << [*x, "", "Couldn't ping", ""]
+				csv_output << [*x, "", "Couldn't ping", "", ""]
 				next
 
 			end

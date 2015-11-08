@@ -8,6 +8,8 @@ Linkfixer::Application.routes.draw do
 
   post "linkers/uploader"
 
+  get 'ping_url' => 'linkers#ping'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
