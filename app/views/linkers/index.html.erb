@@ -55,7 +55,7 @@ function readCSVFile() {
       new_row.appendChild(new_cell);
 
       var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "http://linkfixer.herokuapp.com/ping_url?url_string=" + encodeURIComponent(lines[i]) + "&search_term=" + encodeURIComponent(document.getElementById('search_term').value), false);
+      xhttp.open("GET", "<%= ping_url_path %>?url_string=" + encodeURIComponent(lines[i]) + "&search_term=" + encodeURIComponent(document.getElementById('search_term').value), false);
       xhttp.send();
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         console.log(xhttp.responseText);
