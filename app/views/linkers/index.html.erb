@@ -46,15 +46,15 @@ function readCSVFile() {
   reader.onload = function(event) {
     var lines = reader.result.split('\n');
 
-    for (var i = 0; i < lines.length; i+=1) {
+    lines.forEach(function(line) {
       var new_row = document.createElement('tr'),
           new_cell = document.createElement('td'),
           request = new XMLHttpRequest;
 
-      new_cell.appendChild(document.createTextNode(lines[i]));
+      new_cell.appendChild(document.createTextNode(line));
       new_row.appendChild(new_cell);
 
-      request.open("GET", "<%= ping_url_path %>?url_string=" + encodeURIComponent(lines[i]) + "&search_term=" + encodeURIComponent(document.getElementById('search_term').value), false);
+      request.open("GET", "<%= ping_url_path %>?url_string=" + encodeURIComponent(line) + "&search_term=" + encodeURIComponent(document.getElementById('search_term').value), false);
       request.send();
 
       if (request.readyState == 4 && request.status == 200) {
@@ -69,8 +69,7 @@ function readCSVFile() {
 
         tbdy.appendChild(new_row);
       }
-
-    }
+    });
 
   }
 
