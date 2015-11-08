@@ -8,7 +8,7 @@
   </div>
   <div class="form-group">
     <%= label_tag %>
-    <%= text_field_tag 'search_term', "", {:placeholder => 'Search term here', :class => 'form-control'} %>
+    <%= text_field_tag 'search-term', "", {:placeholder => 'Search term here', :class => 'form-control'} %>
   </div>
   <%= submit_tag 'Process URLs', class: 'btn btn-default' %>
   <button class='btn btn-default' id='test-button'>Test</button>
@@ -38,7 +38,7 @@ $(function() {
   });
 
   var readCSVFile = function() {
-    var csv_list = document.getElementById("CSVfile").files[0],
+    var csvContents = document.getElementById("CSVfile").files[0],
         reader = new FileReader(),
         tbdy = $('#test-results tbody')[0];
 
@@ -46,33 +46,21 @@ $(function() {
       var lines = reader.result.split('\n');
 
       lines.forEach(function(line) {
-        var new_row = document.createElement('tr'),
-            new_cell = document.createElement('td'),
-            request = new XMLHttpRequest;
+        var $tr = $('<tr>'),
+            requestParams = { url_string: line, search_term: $('#search-term').val() };
 
-        new_cell.appendChild(document.createTextNode(line));
-        new_row.appendChild(new_cell);
-
-        request.open("GET", "<%= ping_url_path %>?url_string=" + encodeURIComponent(line) + "&search_term=" + encodeURIComponent(document.getElementById('search_term').value), false);
-        request.send();
-
-        if (request.readyState == 4 && request.status == 200) {
-          var response = JSON.parse(request.responseText);
-          console.log(response);
-
-          response.forEach(function(item) {
-            var new_cell = document.createElement('td');
-            new_cell.appendChild(document.createTextNode(item));
-            new_row.appendChild(new_cell);
+        $tr.append($('<td>' + line + '</td>'));
+        $.getJSON('<%= ping_url_path %>', requestParams).done(function(result) {
+          result.forEach(function(item) {
+            $tr.append($('<td>' + item + '</td>'));
           });
-
-          tbdy.appendChild(new_row);
-        }
+          $('#test-results tbody').append($tr);
+        });
       });
 
     }
 
-    reader.readAsText(csv_list);
+    reader.readAsText(csvContents);
   };
 });
 
